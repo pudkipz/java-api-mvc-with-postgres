@@ -119,14 +119,15 @@ public class EmployeeRepository {
         ps.setInt(1, id);
 
         ResultSet results = ps.executeQuery();
-        results.next();
-
-        return new Employee(
-                results.getInt("id"),
-                results.getString("name"),
-                results.getString("job_name"),
-                results.getInt("salary_grade_id"),
-                results.getInt("department_id"));
+        if (results.next()) {
+            return new Employee(
+                    results.getInt("id"),
+                    results.getString("name"),
+                    results.getString("job_name"),
+                    results.getInt("salary_grade_id"),
+                    results.getInt("department_id"));
+        }
+        return null;
     }
 
     public Employee updateOne(int id, Employee employee) throws SQLException {
