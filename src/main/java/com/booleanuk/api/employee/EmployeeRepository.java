@@ -33,9 +33,9 @@ public class EmployeeRepository {
             String id = Integer.toString(results.getInt("id"));
             String name = results.getString("name");
             String jobName = results.getString("job_name");
-            String salaryGrade = results.getString("salary_grade");
-            String department = results.getString("department");
-            System.out.printf("%s - %s - %s - %s - %s%n", id, name, jobName, salaryGrade, department);
+            int salaryGradeId = results.getInt("salary_grade_id");
+            int departmentId = results.getInt("department_id");
+            System.out.printf("%s - %s - %s - %s - %s%n", id, name, jobName, salaryGradeId, departmentId);
         }
     }
 
@@ -68,15 +68,15 @@ public class EmployeeRepository {
     public Employee add(Employee employee) throws SQLException {
         String sql = """
                 INSERT INTO employees\
-                (name, job_name, salary_grade, department)\
+                (name, job_name, salary_grade_id, department_id)\
                 VALUES\
                 (?, ?, ?, ?)
                 """;
         PreparedStatement ps = this.connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
         ps.setString(1, employee.getName());
         ps.setString(2, employee.getJobName());
-        ps.setString(3, employee.getSalaryGrade());
-        ps.setString(4, employee.getDepartment());
+        ps.setInt(3, employee.getSalaryGradeId());
+        ps.setInt(4, employee.getDepartmentId());
         int nRowsAffected = ps.executeUpdate();
         int newId = 0;
         if (nRowsAffected > 0) {
@@ -105,8 +105,8 @@ public class EmployeeRepository {
                     results.getInt("id"),
                     results.getString("name"),
                     results.getString("job_name"),
-                    results.getString("salary_grade"),
-                    results.getString("department"));
+                    results.getInt("salary_grade_id"),
+                    results.getInt("department_id"));
             employees.add(e);
         }
 
@@ -125,8 +125,8 @@ public class EmployeeRepository {
                 results.getInt("id"),
                 results.getString("name"),
                 results.getString("job_name"),
-                results.getString("salary_grade"),
-                results.getString("department"));
+                results.getInt("salary_grade_id"),
+                results.getInt("department_id"));
     }
 
     public Employee updateOne(int id, Employee employee) throws SQLException {
@@ -134,16 +134,16 @@ public class EmployeeRepository {
                 UPDATE employees
                 SET name = ?,
                 job_name = ?,
-                salary_grade = ?,
-                department = ?
+                salary_grade_id = ?,
+                department_id = ?
                 WHERE id = ?;
                 """;
 
         PreparedStatement ps = this.connection.prepareStatement(sql);
         ps.setString(1, employee.getName());
         ps.setString(2, employee.getJobName());
-        ps.setString(3, employee.getSalaryGrade());
-        ps.setString(4, employee.getDepartment());
+        ps.setInt(3, employee.getSalaryGradeId());
+        ps.setInt(4, employee.getDepartmentId());
         ps.setInt(5, id);
 
         int nRowsAffected = ps.executeUpdate();
