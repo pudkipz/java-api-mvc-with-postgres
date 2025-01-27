@@ -1,4 +1,4 @@
-package com.booleanuk.api.department;
+package com.booleanuk.api.salarygrade;
 
 import org.postgresql.ds.PGSimpleDataSource;
 
@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-public class DepartmentRepository {
+public class SalaryGradeRepository {
     private DataSource dataSource;
     private String dbUser;
     private String dbURL;
@@ -18,7 +18,7 @@ public class DepartmentRepository {
     private String dbDatabase;
     private Connection connection;
 
-    public DepartmentRepository() throws SQLException {
+    public SalaryGradeRepository() throws SQLException {
         this.getDatabaseCredentials();
         this.dataSource = this.createDataSource();
         this.connection = this.dataSource.getConnection();
@@ -50,18 +50,20 @@ public class DepartmentRepository {
         return dataSource;
     }
 
-    public Department add(Department department) throws SQLException {
+    public SalaryGrade add(SalaryGrade salaryGrade) throws SQLException {
         String sql = """
-                INSERT INTO departments\
-                (name, location)\
+                INSERT INTO salary_grades\
+                (grade, min_salary, max_salary)\
                 VALUES\
-                (?, ?)
+                (?, ?, ?);
                 """;
         PreparedStatement ps = this.connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-        ps.setString(1, department.getName());
-        ps.setString(2, department.getLocation());
+        ps.setString(1, salaryGrade.getGrade());
+        ps.setInt(2, salaryGrade.getMinSalary());
+        ps.setInt(3, salaryGrade.getMaxSalary());
+
         int nRowsAffected = ps.executeUpdate();
-        int newId = -1;
+        int newId = 0;
         if (nRowsAffected > 0) {
             try (ResultSet rs = ps.getGeneratedKeys()) {
                 if (rs.next()) {
@@ -70,57 +72,61 @@ public class DepartmentRepository {
             } catch (Exception e) {
                 System.out.println("Oops in add: " + e);
             }
-            department.setId(newId);
-            return department;
+            salaryGrade.setId(newId);
+            return salaryGrade;
         }
         return null;
     }
 
-    public List<Department> getAll() throws SQLException {
-        List<Department> departments = new ArrayList<>();
+    public List<SalaryGrade> getAll() throws SQLException {
+        List<SalaryGrade> salaryGrades = new ArrayList<>();
         PreparedStatement ps = this.connection.prepareStatement(
-                "SELECT * FROM departments;");
+                "SELECT * FROM salary_grades;");
 
         ResultSet results = ps.executeQuery();
 
         while (results.next()) {
-            Department d = new Department(
+            SalaryGrade salaryGrade = new SalaryGrade(
                     results.getInt("id"),
-                    results.getString("name"),
-                    results.getString("location"));
-            departments.add(d);
+                    results.getString("grade"),
+                    results.getInt("min_salary"),
+                    results.getInt("max_salary"));
+            salaryGrades.add(salaryGrade);
         }
 
-        return departments;
+        return salaryGrades;
     }
 
-    public Department getOne(int id) throws SQLException {
+    public SalaryGrade getOne(int id) throws SQLException {
         PreparedStatement ps = this.connection.prepareStatement(
-                "SELECT * FROM departments WHERE id = ?;");
+                "SELECT * FROM salary_grades WHERE id = ?;");
         ps.setInt(1, id);
 
         ResultSet results = ps.executeQuery();
         if (results.next()) {
-            return new Department(
+            return new SalaryGrade(
                     results.getInt("id"),
-                    results.getString("name"),
-                    results.getString("location"));
+                    results.getString("grade"),
+                    results.getInt("min_salary"),
+                    results.getInt("max_salary"));
         }
         return null;
     }
 
-    public Department updateOne(int id, Department department) throws SQLException {
+    public SalaryGrade updateOne(int id, SalaryGrade salaryGrade) throws SQLException {
         String sql = """
-                UPDATE departments
-                SET name = ?,
-                location = ?
+                UPDATE salary_grades
+                SET grade = ?,
+                min_salary = ?,
+                max_salary = ?
                 WHERE id = ?;
                 """;
 
         PreparedStatement ps = this.connection.prepareStatement(sql);
-        ps.setString(1, department.getName());
-        ps.setString(2, department.getLocation());
-        ps.setInt(3, id);
+        ps.setString(1, salaryGrade.getGrade());
+        ps.setInt(2, salaryGrade.getMinSalary());
+        ps.setInt(3, salaryGrade.getMaxSalary());
+        ps.setInt(4, id);
 
         int nRowsAffected = ps.executeUpdate();
         if (nRowsAffected > 0) {
@@ -129,19 +135,19 @@ public class DepartmentRepository {
         return null;
     }
 
-    public Department deleteOne(int id) throws SQLException {
+    public SalaryGrade deleteOne(int id) throws SQLException {
         String sql = """
-                DELETE FROM departments
+                DELETE FROM salaryGrades
                 WHERE id = ?;
                 """;
         PreparedStatement ps = this.connection.prepareStatement(sql);
         ps.setInt(1, id);
 
-        Department departmentToDelete = this.getOne(id);
+        SalaryGrade salaryGradeToDelete = this.getOne(id);
 
         int nRowsAffected = ps.executeUpdate();
         if (nRowsAffected > 0) {
-            return departmentToDelete;
+            return salaryGradeToDelete;
         }
         return null;
     }

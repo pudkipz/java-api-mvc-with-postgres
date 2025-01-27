@@ -11,6 +11,20 @@ public class Department {
         this.location = location;
     }
 
+    public Department(String location, String name) {
+        this.location = location;
+        this.name = name;
+    }
+
+
+
+    public Department() {
+    }
+
+    public Department(int id) {
+        this.id = id;
+    }
+
     public int getId() {
         return id;
     }
@@ -34,4 +48,6 @@ public class Department {
     public void setLocation(String location) {
         this.location = location;
     }
+
+
 }

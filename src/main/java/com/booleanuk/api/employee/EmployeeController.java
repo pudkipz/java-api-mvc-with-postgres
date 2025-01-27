@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @RestController
-@RequestMapping("employees")
+@RequestMapping("/employees")
 public class EmployeeController {
     private EmployeeRepository employees;
 

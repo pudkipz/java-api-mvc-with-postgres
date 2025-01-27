@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @RestController
-@RequestMapping("departments")
+@RequestMapping("/departments")
 public class DepartmentController {
     private DepartmentRepository departments;
 

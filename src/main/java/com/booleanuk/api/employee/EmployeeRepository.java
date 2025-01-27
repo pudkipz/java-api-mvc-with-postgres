@@ -24,20 +24,20 @@ public class EmployeeRepository {
         this.connection = this.dataSource.getConnection();
     }
 
-    public void connectToDatabase() throws SQLException {
-        PreparedStatement statement = this.connection.prepareStatement(
-                "SELECT * FROM employees");
-        ResultSet results = statement.executeQuery();
-
-        while (results.next()) {
-            String id = Integer.toString(results.getInt("id"));
-            String name = results.getString("name");
-            String jobName = results.getString("job_name");
-            int salaryGradeId = results.getInt("salary_grade_id");
-            int departmentId = results.getInt("department_id");
-            System.out.printf("%s - %s - %s - %s - %s%n", id, name, jobName, salaryGradeId, departmentId);
-        }
-    }
+//    public void connectToDatabase() throws SQLException {
+//        PreparedStatement statement = this.connection.prepareStatement(
+//                "SELECT * FROM employees");
+//        ResultSet results = statement.executeQuery();
+//
+//        while (results.next()) {
+//            String id = Integer.toString(results.getInt("id"));
+//            String name = results.getString("name");
+//            String jobName = results.getString("job_name");
+//            int salaryGradeId = results.getInt("salary_grade_id");
+//            int departmentId = results.getInt("department_id");
+//            System.out.printf("%s - %s - %s - %s - %s%n", id, name, jobName, salaryGradeId, departmentId);
+//        }
+//    }
 
     private void getDatabaseCredentials() {
         try (InputStream input = new FileInputStream("src/main/resources/config.properties")) {
