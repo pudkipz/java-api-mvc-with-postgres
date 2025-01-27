@@ -1,7 +1,7 @@
 INSERT INTO departments
-    (id, name, location)
+    (name, location)
 VALUES
 -- values completely fictional
-    (1, 'management', 'The office'),
-    (2, 'retail', 'The floor'),
-    (3, 'food', 'The kitchen');
+    ('management', 'The office'),
+    ('retail', 'The floor'),
+    ('food', 'The kitchen');
